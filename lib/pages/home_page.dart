@@ -1,3 +1,4 @@
+import 'package:app_scaner/providers/provider_list_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,13 @@ class HomePage extends StatelessWidget {
         elevation: 0,
         title: const Center(child: Text('Historial')),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.delete_forever))
+          IconButton(
+              onPressed: () {
+                final listScanProvider =
+                    Provider.of<ProviderListScan>(context, listen: false);
+                listScanProvider.deleteAllScan();
+              },
+              icon: const Icon(Icons.delete_forever))
         ],
       ),
       body: const _HomePageBody(),
@@ -38,14 +45,19 @@ class _HomePageBody extends StatelessWidget {
 
     final currentIndex = uiProvider.selectedOpt;
 
+    final listScanProvider =
+        Provider.of<ProviderListScan>(context, listen: false);
+
     //Leer base de datos temporalmente
 
     ProviderDB.dataBase.database;
 
     switch (currentIndex) {
       case 0:
+        listScanProvider.cargarScanWihtType('geo');
         return const MapsPage();
       case 1:
+        listScanProvider.cargarScanWihtType('http');
         return const DirectionPage();
       default:
         return const MapsPage();

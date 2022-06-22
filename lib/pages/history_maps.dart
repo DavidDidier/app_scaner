@@ -1,3 +1,4 @@
+import 'package:app_scaner/widgets/list_scan.dart';
 import 'package:flutter/material.dart';
 
 class MapsPage extends StatelessWidget {
@@ -5,8 +6,6 @@ class MapsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Maps page'),
-    );
+    return const ListScan(tipo: 'geo');
   }
 }

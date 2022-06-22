@@ -27,42 +27,40 @@ class ProviderDB {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
 
     final path = join(documentDirectory.path, 'ScansDB.db');
-    print(path);
     //crear base de datos
 
-    return await openDatabase(path, version: 1, onOpen: (db) {},
+    return await openDatabase(path, version: 1, onOpen: (db) async {},
         onCreate: (Database db, int version) async {
       await db.execute('''
         CREATE TABLE Scaneres(
           id INTEGER PRIMARY KEY,
-          tipo VARCHAR(255),
-          valor VARCHAR(255)
+          tipo TEXT,
+          valor TEXT
         )
       ''');
     });
   }
 
-  Future<int> newScanRaw(ModelScan newScan) async {
-    final id = newScan.id;
-    final tipo = newScan.tipo;
-    final valor = newScan.valor;
-
-    //Verifica la base de datos
-    final dataB = await database;
-
-    final resp = await dataB.rawInsert('''
-      INSERT INTO Scaneres(id, tipo, valor)
-        VALUES($id, '$tipo', '$valor')
-
-    ''');
-
-    return resp;
-  }
+  // Future<int> newScanRaw(ModelScan newScan) async {
+  //   final id = newScan.id;
+  //   final tipo = newScan.tipo;
+  //   final valor = newScan.valor;
+//
+  //   //Verifica la base de datos
+  //   final dataB = await database;
+//
+  //   final resp = await dataB.rawInsert('''
+  //     INSERT INTO Scaneres(id, tipo, valor)
+  //       VALUES($id, '$tipo', '$valor')
+//
+  //   ''');
+  //   return resp;
+  // }
 
   Future<int> newScan(ModelScan newScan) async {
     final databa = await database;
 
-    final resp = await databa.insert('Scans', newScan.toJson());
+    final resp = await databa.insert('Scaneres', newScan.toJson());
 
     print(resp);
 
@@ -76,7 +74,7 @@ class ProviderDB {
     return resp.isNotEmpty ? ModelScan.fromJson(resp.first) : null;
   }
 
-  Future<List<ModelScan>?> getScanAll(int id) async {
+  Future<List<ModelScan>> getScanAll() async {
     final db = await database;
     final resp = await db.query('Scaneres');
 
@@ -85,11 +83,11 @@ class ProviderDB {
         : [];
   }
 
-  Future<List<ModelScan>?> getScanWithTipo(String tipo) async {
+  Future<List<ModelScan>> getScanWithTipo(String tipo) async {
     final db = await database;
-    final resp =
-        await db.query('Scaneres', where: 'tipo= ?', whereArgs: [tipo]);
-
+    final resp = await db.rawQuery(''''
+    SELECT * FROM Scaneres WHERE tipo = $tipo
+''');
     return resp.isNotEmpty
         ? resp.map((e) => ModelScan.fromJson(e)).toList()
         : [];

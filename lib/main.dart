@@ -1,3 +1,4 @@
+import 'package:app_scaner/providers/provider_list_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => UIProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => UIProvider()),
+        ChangeNotifierProvider(create: (_) => ProviderListScan())
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Lector QR',

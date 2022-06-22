@@ -10,19 +10,19 @@ String modelScanToJson(ModelScan data) => json.encode(data.toJson());
 
 class ModelScan {
   ModelScan({
-    required this.id,
-    required this.tipo,
+    this.id,
+    this.tipo,
     required this.valor,
   }) {
-    if (tipo.contains('http')) {
+    if (tipo!.contains('http')) {
       tipo = 'http';
     } else {
       tipo = 'geo';
     }
   }
 
-  int id;
-  String tipo;
+  int? id;
+  String? tipo;
   String valor;
 
   factory ModelScan.fromJson(Map<String, dynamic> json) => ModelScan(
